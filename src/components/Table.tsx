@@ -103,12 +103,16 @@ const Table = (props: TableProps) => {
                         </div>
                       </div>
                     )}
-                    <a
-                      href={item.link ?? "#"}
-                      className="underline text-blue-500 underline-offset-4"
-                    >
-                      {item.link}
-                    </a>
+                    {item.link ? (
+                      <a
+                        href={item.link}
+                        className="underline text-blue-500 underline-offset-4"
+                      >
+                        Link to file
+                      </a>
+                    ) : (
+                      <span>No link</span>
+                    )}
                   </td>
                   <td className="px-4 text-start">
                     {item.ar_no?.slice(0, 15)}
@@ -138,11 +142,19 @@ const Table = (props: TableProps) => {
                       <FaX color="red" />
                     )}
                   </td>
-                  <td className="px-4 text-start">{item.remarks}</td>
-                  <td className="px-4 text-start">{item.month}</td>
-                  {/* <td className="px-4 text-start">
-                    {item.timestamp.toLocaleDateString()}
-                  </td> */}
+                  <td className="px-4 text-start">
+                    {item.remarks ? (
+                      item.remarks
+                    ) : (
+                      <p className="italic text-gray-400">No Remarks</p>
+                    )}
+                  </td>
+                  <td className="px-4 text-start">
+                    {item.month ? item.month : "Not included yet"}
+                  </td>
+                  <td className="px-4 text-start">
+                    {item.timestamp?.slice(0, 10)}
+                  </td>
                 </tr>
               );
             })}

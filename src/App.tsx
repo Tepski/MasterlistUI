@@ -53,7 +53,7 @@ function App() {
         <div
           className={`flex h-full w-full absolute justify-end bg-[rgba(0,0,0,0.05)] items-end z-20 animate-in ease-in-out duration-100`}
         >
-          <Modal setOpen={setOpenForm} set={setDummy} />
+          <Modal setOpen={setOpenForm} set={setDummy} data={dummy} />
         </div>
       ) : (
         <div

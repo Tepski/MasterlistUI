@@ -11,11 +11,14 @@ import {
 const Modal = ({
   setOpen,
   set,
+  data,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   set: React.Dispatch<React.SetStateAction<IData[]>>;
+  data: IData[];
 }) => {
   const [current, setCurrent] = useState<IApiData>({
+    abnormality: "",
     affected_item: "",
     ar_category: "",
     area: "",
@@ -40,6 +43,12 @@ const Modal = ({
       return;
     }
 
+    let new_data = data.filter((item, index) => {
+      return item[target.name].includes(target.value) && item;
+    });
+
+    console.log(new_data);
+
     setCurrent({ ...current, [target.name]: target.value });
   };
 
@@ -51,24 +60,24 @@ const Modal = ({
       return res;
     } catch (error) {
       console.log(error);
+      alert("An error occured");
     }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    try {
+      const res: any = await setData(current);
 
-    const res: any = await setData(current);
+      // console.log(res);
 
-    // console.log(res);
+      set((prev) => [...prev, res]);
 
-    set((prev) => [...prev, res]);
-
-    setOpen((prev) => !prev);
+      setOpen((prev) => !prev);
+    } catch (error) {
+      alert("An error occured");
+    }
   };
-
-  // useEffect(() => {
-  //   console.log(current);
-  // }, [current]);
 
   const [apiData, setApiData] = useState<IData[]>([]);
 
@@ -126,7 +135,7 @@ const Modal = ({
               })}
             </select>
           </label>
-          {/* <label className="flex flex-col">
+          <label className="flex flex-col">
             <p>ABNORMALITY:</p>
             <input
               onChange={(e) => handleChange(e)}
@@ -134,7 +143,7 @@ const Modal = ({
               name="abnormality"
               className="border-[1px] border-gray-300 rounded p-2"
             />
-          </label> */}
+          </label>
           <label className="flex flex-col">
             <p>NATURE OF ABNORMALITY:</p>
             <input
@@ -254,22 +263,23 @@ const Modal = ({
               className="border-[1px] border-gray-300 rounded p-2"
             />
           </label>
-
-          <label className="flex flex-col col-span-5">
-            <p className="text-gray-500">REMARKS:</p>
-            <textarea
-              rows={3}
-              style={{ resize: "none" }}
-              name="remarks"
-              className="border-[1px] border-gray-300 rounded p-2"
-            />
-          </label>
-          <label className="flex h-full flex-row justify-center gap-4 items-center border-l-[1px] border-gray-500">
+          <label className="flex h-full flex-row justify-center gap-4 items-center border-r-[1px] border-gray-500">
             <p>FANOUT?</p>
             <input
               onChange={(e) => handleChange(e)}
               type="checkbox"
               name="fanout"
+              className="border-[1px] border-gray-300 rounded p-2"
+            />
+          </label>
+
+          <label className="flex flex-col col-span-4">
+            <p className="text-gray-500">REMARKS:</p>
+            <textarea
+              rows={3}
+              style={{ resize: "none" }}
+              name="remarks"
+              onChange={(e) => handleChange(e)}
               className="border-[1px] border-gray-300 rounded p-2"
             />
           </label>

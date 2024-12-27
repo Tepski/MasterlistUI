@@ -19,11 +19,13 @@ export interface IData {
     remarks: string;
     month: number | null;
     timestamp: string | null;
+    [key:string]: any,
   }
 
 export interface IApiData {
   area: string;
   ar_category: string;
+  abnormality: string,
   nature_of_abnormality: string;
   affected_item: string;
   level: number;
