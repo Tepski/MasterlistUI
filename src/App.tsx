@@ -3,11 +3,11 @@ import { FaPlus } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import Modal from "./components/Modal";
 // import { sampleData } from "../sample_data";
-import { IData } from "@/interfaces";
-import { get } from "./api/api";
+import { IApiData } from "@/interfaces";
+import { get, del } from "./api/api";
 
 function App() {
-  const [dummy, setDummy] = useState<IData[]>([]);
+  const [dummy, setDummy] = useState<IApiData[]>([]);
 
   const fields: string[] = [
     "LINK",
@@ -32,8 +32,35 @@ function App() {
     "timestamp",
   ];
 
+  const [current, setCurrent] = useState<IApiData>({
+    link: "",
+    id: 0,
+    ar_no: "",
+    car_no: "",
+    abnormality: "",
+    affected_item: "",
+    ar_category: "",
+    area: "",
+    countermeasure: "",
+    created: "",
+    detection_process: "",
+    fanout: false,
+    function: "",
+    incharge: "",
+    level: 1,
+    nature_of_abnormality: "",
+    remarks: "",
+    self_resolve_for_car: "",
+    status: "",
+  });
+
+  const handleDelete = async (id: string) => {
+    await del(id);
+    getData();
+  };
+
   const getData = async () => {
-    let res = (await get("get_data")) as IData[];
+    let res = (await get("get_data")) as IApiData[];
     setDummy(res);
 
     console.log(res);
@@ -47,13 +74,27 @@ function App() {
 
   return (
     <div className={`w-[100vw] h-[100vh] flex justify-center items-center `}>
-      <Table fields={fields} sample={dummy} set={setDummy} />
+      <Table
+        fields={fields}
+        sample={dummy}
+        set={setDummy}
+        current={current}
+        openForm={openForm}
+        setData={setCurrent}
+        del={handleDelete}
+      />
       {/* bg-[rgba(0,0,0,0.3)] */}
       {openForm ? (
         <div
-          className={`flex h-full w-full absolute justify-end bg-[rgba(0,0,0,0.05)] items-end z-20 animate-in ease-in-out duration-100`}
+          className={`flex h-full w-full absolute bg-[rgba(0,0,0,0.1)] justify-end  items-end z-20 animate-in ease-in-out duration-100`}
         >
-          <Modal setOpen={setOpenForm} set={setDummy} data={dummy} />
+          <Modal
+            setOpen={setOpenForm}
+            set={setDummy}
+            current={current}
+            setCurrent={setCurrent}
+            data={dummy}
+          />
         </div>
       ) : (
         <div

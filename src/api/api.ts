@@ -29,3 +29,12 @@ export const post = async (url: string, data: any) => {
         throw error;
     }
 };
+
+export const del = async (id: string) => {
+    try {
+        const response = await api.delete(`delete_data/${id}/`)
+        console.log("item deleted succesfully", response)
+    } catch (error) {
+        console.error("Error deleting item", error)
+    }
+}

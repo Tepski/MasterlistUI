@@ -1,5 +1,5 @@
-import { IData, IApiData } from "../interfaces";
-import { FormEvent, useState, useEffect } from "react";
+import { IApiData } from "../interfaces";
+import React, { FormEvent, useState, useEffect } from "react";
 import { get, post } from "../api/api";
 import {
   area_choices,
@@ -11,30 +11,16 @@ import {
 const Modal = ({
   setOpen,
   set,
+  current,
+  setCurrent,
   data,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  set: React.Dispatch<React.SetStateAction<IData[]>>;
-  data: IData[];
+  set: React.Dispatch<React.SetStateAction<IApiData[]>>;
+  current: IApiData;
+  setCurrent: React.Dispatch<React.SetStateAction<IApiData>>;
+  data: IApiData[];
 }) => {
-  const [current, setCurrent] = useState<IApiData>({
-    abnormality: "",
-    affected_item: "",
-    ar_category: "",
-    area: "",
-    countermeasure: "",
-    created: "",
-    detection_process: "",
-    fanout: false,
-    function: "",
-    incharge: "",
-    level: 1,
-    nature_of_abnormality: "",
-    remarks: "",
-    self_resolve_for_car: "",
-    status: "",
-  });
-
   const handleChange = (e: FormEvent) => {
     const target = e.target as HTMLInputElement;
 
@@ -43,13 +29,31 @@ const Modal = ({
       return;
     }
 
-    let new_data = data.filter((item, index) => {
-      return item[target.name].includes(target.value) && item;
-    });
-
-    console.log(new_data);
+    console.log(checkReoccurence(current) ? "RE" : "OC");
 
     setCurrent({ ...current, [target.name]: target.value });
+  };
+
+  const checkReoccurence = (current: IApiData) => {
+    let filteredList = [
+      "ar_category",
+      "area",
+      "abnormality",
+      "nature_of_abnormality",
+      "affected_item",
+    ];
+
+    let reoccurence: boolean = true;
+
+    for (let item of data) {
+      for (let name of filteredList) {
+        if (current[name] && item[name] == current[name]) {
+          reoccurence = false;
+        }
+      }
+    }
+
+    return reoccurence;
   };
 
   const setData = async (
@@ -69,8 +73,6 @@ const Modal = ({
     try {
       const res: any = await setData(current);
 
-      // console.log(res);
-
       set((prev) => [...prev, res]);
 
       setOpen((prev) => !prev);
@@ -79,10 +81,10 @@ const Modal = ({
     }
   };
 
-  const [apiData, setApiData] = useState<IData[]>([]);
+  const [apiData, setApiData] = useState<IApiData[]>([]);
 
   const getData = async () => {
-    const data = (await get("get_data")) as IData[];
+    const data = (await get("get_data")) as IApiData[];
     setApiData(data);
     console.log(apiData);
   };
