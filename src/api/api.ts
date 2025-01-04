@@ -1,3 +1,4 @@
+import { IApiData } from '@/interfaces';
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8000/api/'
@@ -36,5 +37,14 @@ export const del = async (id: string) => {
         console.log("item deleted succesfully", response)
     } catch (error) {
         console.error("Error deleting item", error)
+    }
+}
+
+export const edit = async (id: string, data: IApiData) => {
+    try {
+        const response = await api.put(`edit_data/${id}/`, data)
+        return response.data
+    } catch (error) {
+        console.error("Error, item not found", error)
     }
 }

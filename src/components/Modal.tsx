@@ -1,6 +1,6 @@
 import { IApiData } from "../interfaces";
 import React, { FormEvent, useState, useEffect } from "react";
-import { get, post } from "../api/api";
+import { edit, get, post } from "../api/api";
 import {
   area_choices,
   SRorCAR,
@@ -8,30 +8,28 @@ import {
   status,
 } from "./FormsChoices";
 
-const Modal = ({
-  setOpen,
-  set,
-  current,
-  setCurrent,
-  data,
-}: {
+interface IModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   set: React.Dispatch<React.SetStateAction<IApiData[]>>;
   current: IApiData;
   setCurrent: React.Dispatch<React.SetStateAction<IApiData>>;
   data: IApiData[];
-}) => {
+  editMode: boolean;
+  setEdit: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Modal = (props: IModalProps) => {
   const handleChange = (e: FormEvent) => {
     const target = e.target as HTMLInputElement;
 
     if (target.type === "checkbox") {
-      setCurrent({ ...current, [target.name]: target.checked });
+      props.setCurrent({ ...props.current, [target.name]: target.checked });
       return;
     }
 
-    console.log(checkReoccurence(current) ? "RE" : "OC");
+    console.log(checkReoccurence(props.current) ? "RE" : "OC");
 
-    setCurrent({ ...current, [target.name]: target.value });
+    props.setCurrent({ ...props.current, [target.name]: target.value });
   };
 
   const checkReoccurence = (current: IApiData) => {
@@ -45,7 +43,7 @@ const Modal = ({
 
     let reoccurence: boolean = true;
 
-    for (let item of data) {
+    for (let item of props.data) {
       for (let name of filteredList) {
         if (current[name] && item[name] == current[name]) {
           reoccurence = false;
@@ -70,12 +68,30 @@ const Modal = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (props.editMode) {
+      const response = (await edit(
+        props.current.id.toString(),
+        props.current
+      )) as IApiData;
+      console.log(response);
+
+      const newData = props.data.filter((item) => item.id != props.current.id);
+      newData.push(response);
+      props.set(newData);
+      props.setOpen((prev) => !prev);
+      props.setEdit((prev) => !prev);
+      return;
+    }
+
     try {
-      const res: any = await setData(current);
+      const res: any = await setData(props.current);
 
-      set((prev) => [...prev, res]);
+      props.set((prev) => [...prev, res]);
 
-      setOpen((prev) => !prev);
+      // getData();
+
+      props.setOpen((prev) => !prev);
     } catch (error) {
       alert("An error occured");
     }
@@ -84,9 +100,18 @@ const Modal = ({
   const [apiData, setApiData] = useState<IApiData[]>([]);
 
   const getData = async () => {
-    const data = (await get("get_data")) as IApiData[];
-    setApiData(data);
-    console.log(apiData);
+    try {
+      const data = (await get("get_data")) as IApiData[];
+      setApiData(data);
+      console.log(apiData);
+    } catch (error) {
+      console.error("An Error Occured for some effing reason");
+    }
+  };
+
+  const handleCloseModal = () => {
+    props.setOpen((prev) => !prev);
+    props.setEdit(false);
   };
 
   useEffect(() => {
@@ -105,7 +130,12 @@ const Modal = ({
               name="ar_category"
               className="border-[1px] border-gray-300 rounded p-2"
             >
-              <option value="Select Category" disabled>
+              <option
+                value={
+                  props.editMode ? props.current.ar_category : "Select Category"
+                }
+                disabled
+              >
                 Select Category
               </option>
               {category_choices.map((cath, index) => {
@@ -125,7 +155,10 @@ const Modal = ({
               className="border-[1px] border-gray-300 rounded p-2"
               defaultValue={"Select Area"}
             >
-              <option value="Select Area" disabled>
+              <option
+                value={props.editMode ? props.current.area : "Select Area"}
+                disabled
+              >
                 Select Area
               </option>
               {area_choices.map((area, index) => {
@@ -144,6 +177,7 @@ const Modal = ({
               type="text"
               name="abnormality"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.abnormality : ""}
             />
           </label>
           <label className="flex flex-col">
@@ -153,6 +187,7 @@ const Modal = ({
               type="text"
               name="nature_of_abnormality"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.nature_of_abnormality : ""}
             />
           </label>
           <label className="flex flex-col">
@@ -162,6 +197,7 @@ const Modal = ({
               type="text"
               name="affected_item"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.affected_item : ""}
             />
           </label>
           <label className="flex flex-col">
@@ -172,7 +208,10 @@ const Modal = ({
               className="border-[1px] border-gray-300 rounded p-2"
               defaultValue={"Select Level"}
             >
-              <option value="Select Level" disabled>
+              <option
+                value={props.editMode ? props.current.level : "Select Level"}
+                disabled
+              >
                 Select Level
               </option>
               <option value="One">1</option>
@@ -186,6 +225,7 @@ const Modal = ({
               type="date"
               name="created"
               className="border-[1px] border-gray-300 rounded p-2"
+              disabled={props.editMode}
             />
           </label>
           <label className="flex flex-col">
@@ -195,6 +235,7 @@ const Modal = ({
               type="text"
               name="detection_process"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.detection_process : ""}
             />
           </label>
           <label className="flex flex-col">
@@ -204,6 +245,7 @@ const Modal = ({
               type="text"
               name="function"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.function : ""}
             />
           </label>
           <label className="flex flex-col">
@@ -213,6 +255,7 @@ const Modal = ({
               type="text"
               name="incharge"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.incharge : ""}
             />
           </label>
           <label className="flex flex-col">
@@ -223,7 +266,14 @@ const Modal = ({
               name="self_resolve_for_car"
               className="border-[1px] border-gray-300 rounded p-2"
             >
-              <option value="Select Method" disabled>
+              <option
+                value={
+                  props.editMode
+                    ? props.current.self_resolve_for_car
+                    : "Select Method"
+                }
+                disabled
+              >
                 Select Method
               </option>
               {SRorCAR.map((item, index) => {
@@ -244,7 +294,10 @@ const Modal = ({
               name="status"
               className="border-[1px] border-gray-300 rounded p-2"
             >
-              <option value="Select Status" disabled>
+              <option
+                value={props.editMode ? props.current.status : "Select Status"}
+                disabled
+              >
                 Select Status
               </option>
               {status.map((stat, index) => {
@@ -263,6 +316,7 @@ const Modal = ({
               type="text"
               name="countermeasure"
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.countermeasure : ""}
             />
           </label>
           <label className="flex h-full flex-row justify-center gap-4 items-center border-r-[1px] border-gray-500">
@@ -272,6 +326,7 @@ const Modal = ({
               type="checkbox"
               name="fanout"
               className="border-[1px] border-gray-300 rounded p-2"
+              checked={props.editMode ? props.current.fanout : false}
             />
           </label>
 
@@ -283,13 +338,14 @@ const Modal = ({
               name="remarks"
               onChange={(e) => handleChange(e)}
               className="border-[1px] border-gray-300 rounded p-2"
+              value={props.editMode ? props.current.remarks : ""}
             />
           </label>
         </div>
 
         <div className="p-4 bottom-0 right-0 left-0 flex justify-end items-end gap-4 border-t-[2px] border-gray-300">
           <p
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={handleCloseModal}
             className="border-[1px] border-black rounded-xl px-4 py-1 bg-white shadow-md shadow-black/30 hover:cursor-pointer active:scale-95"
           >
             Close
@@ -298,7 +354,7 @@ const Modal = ({
             onClick={handleSubmit}
             className="rounded-xl bg-black py-1 px-4 text-white font-semibold border-[1px] shadow-md shadow-black/30 border-black hover:cursor-pointer active:scale-95"
           >
-            Register
+            {props.editMode ? "Update" : "Register"}
           </button>
         </div>
       </form>

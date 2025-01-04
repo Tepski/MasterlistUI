@@ -8,6 +8,7 @@ import { get, del } from "./api/api";
 
 function App() {
   const [dummy, setDummy] = useState<IApiData[]>([]);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   const fields: string[] = [
     "LINK",
@@ -54,9 +55,23 @@ function App() {
     status: "",
   });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (
+    id: string,
+    setIsOpen: React.Dispatch<React.SetStateAction<number | null>>
+  ) => {
     await del(id);
+    setIsOpen(null);
     getData();
+  };
+
+  const handleEdit = async (
+    item: IApiData,
+    setIsOpen: React.Dispatch<React.SetStateAction<number | null>>
+  ) => {
+    setCurrent((prev) => ({ ...prev, ...item }));
+    setOpenForm(true);
+    setIsOpen(null);
+    setEditMode(true);
   };
 
   const getData = async () => {
@@ -82,6 +97,7 @@ function App() {
         openForm={openForm}
         setData={setCurrent}
         del={handleDelete}
+        edit={handleEdit}
       />
       {/* bg-[rgba(0,0,0,0.3)] */}
       {openForm ? (
@@ -94,6 +110,8 @@ function App() {
             current={current}
             setCurrent={setCurrent}
             data={dummy}
+            editMode={editMode}
+            setEdit={setEditMode}
           />
         </div>
       ) : (

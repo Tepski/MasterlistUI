@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { IApiData } from "@/interfaces";
 import { FaCheck, FaX, FaEllipsisVertical } from "react-icons/fa6";
+import { title } from "process";
 
 interface TableProps {
   fields: string[];
@@ -9,17 +10,20 @@ interface TableProps {
   current: IApiData;
   openForm: boolean;
   setData: React.Dispatch<React.SetStateAction<IApiData>>;
-  del: (id: string) => void;
+  del: (
+    id: string,
+    setIsOpen: React.Dispatch<React.SetStateAction<number | null>>
+  ) => void;
+  edit: (
+    item: IApiData,
+    setIsOpen: React.Dispatch<React.SetStateAction<number | null>>
+  ) => void;
 }
 const Table = (props: TableProps) => {
   const [isOpen, setIsOpen] = useState<number | null>(null);
 
   const rowRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  // const handleSubmit = (e: FormEvent) => {
-  //   e.preventDefault();
-  // };
 
   const handleOpen = (id: number) => {
     setIsOpen((prev) => (prev === id ? null : id));
@@ -66,8 +70,6 @@ const Table = (props: TableProps) => {
 
     return true;
   };
-
-  const handleEdit = async () => {};
 
   useEffect(() => {
     const handleMouseOutside = (e: MouseEvent) => {
@@ -133,12 +135,14 @@ const Table = (props: TableProps) => {
                         >
                           <div
                             className="hover:cursor-pointer hover:opacity-75"
-                            onClick={handleEdit}
+                            onClick={() => props.edit(item, setIsOpen)}
                           >
                             Edit
                           </div>
                           <div
-                            onClick={() => props.del(item.id.toString())}
+                            onClick={() =>
+                              props.del(item.id.toString(), setIsOpen)
+                            }
                             className="hover:cursor-pointer hover:opacity-75"
                           >
                             Delete
@@ -147,8 +151,11 @@ const Table = (props: TableProps) => {
                       )}
                       {item?.link ? (
                         <a
-                          href={item.link}
-                          className="underline text-blue-500 underline-offset-4"
+                          // href={item.link}
+                          onClick={() =>
+                            alert("Link not working at the moment, sorry")
+                          }
+                          className="underline text-blue-500 underline-offset-4 hover:cursor-pointer"
                         >
                           Link to file
                         </a>
