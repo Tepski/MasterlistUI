@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { IApiData } from "@/interfaces";
 import { FaCheck, FaX, FaEllipsisVertical } from "react-icons/fa6";
-import { title } from "process";
-
+import { area_colors } from "./FormsChoices";
 interface TableProps {
   fields: string[];
   sample: IApiData[];
@@ -56,7 +55,7 @@ const Table = (props: TableProps) => {
             fanout: false,
             function: "",
             incharge: "",
-            level: 1,
+            level: "Select Level",
             nature_of_abnormality: "",
             remarks: "",
             self_resolve_for_car: "",
@@ -165,7 +164,17 @@ const Table = (props: TableProps) => {
                     </td>
                     <td className="px-4 text-start">{item.ar_no}</td>
                     <td className="px-4 text-start">{item.ar_category}</td>
-                    <td className="px-4 text-start">{item.area}</td>
+                    <td className="px-4 text-start">
+                      <span
+                        style={{
+                          backgroundColor: area_colors[item.area][0],
+                          color: area_colors[item.area][1],
+                        }}
+                        className="py-1 px-4 text-white rounded-xl font-semibold"
+                      >
+                        {item.area}
+                      </span>
+                    </td>
                     <td className="px-4 text-start">{item.abnormality}</td>
                     <td className="px-4 text-start">
                       {item.nature_of_abnormality}

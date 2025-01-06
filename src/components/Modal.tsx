@@ -16,6 +16,7 @@ interface IModalProps {
   data: IApiData[];
   editMode: boolean;
   setEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  modalRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 const Modal = (props: IModalProps) => {
@@ -119,7 +120,10 @@ const Modal = (props: IModalProps) => {
   }, []);
 
   return (
-    <div className="w-auto h-auto rounded-xl relative bg-white flex justify-center items-center border-2 border-gray-500">
+    <div
+      className="w-auto h-auto rounded-xl relative bg-white flex justify-center items-center border-2 border-gray-500"
+      ref={props.modalRef}
+    >
       <form onSubmit={() => console.log("ASD")}>
         <div className="grid grid-cols-6 gap-4 m-10 mx-30">
           <label className="flex flex-col">
@@ -131,9 +135,7 @@ const Modal = (props: IModalProps) => {
               className="border-[1px] border-gray-300 rounded p-2"
             >
               <option
-                value={
-                  props.editMode ? props.current.ar_category : "Select Category"
-                }
+                value={props.current.ar_category || "Select Category"}
                 disabled
               >
                 Select Category
@@ -155,10 +157,7 @@ const Modal = (props: IModalProps) => {
               className="border-[1px] border-gray-300 rounded p-2"
               defaultValue={"Select Area"}
             >
-              <option
-                value={props.editMode ? props.current.area : "Select Area"}
-                disabled
-              >
+              <option value={props.current.area || "Select Area"} disabled>
                 Select Area
               </option>
               {area_choices.map((area, index) => {
@@ -177,7 +176,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="abnormality"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.abnormality : ""}
+              value={props.current.abnormality || ""}
             />
           </label>
           <label className="flex flex-col">
@@ -187,7 +186,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="nature_of_abnormality"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.nature_of_abnormality : ""}
+              value={props.current.nature_of_abnormality || ""}
             />
           </label>
           <label className="flex flex-col">
@@ -197,7 +196,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="affected_item"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.affected_item : ""}
+              value={props.current.affected_item || ""}
             />
           </label>
           <label className="flex flex-col">
@@ -208,10 +207,7 @@ const Modal = (props: IModalProps) => {
               className="border-[1px] border-gray-300 rounded p-2"
               defaultValue={"Select Level"}
             >
-              <option
-                value={props.editMode ? props.current.level : "Select Level"}
-                disabled
-              >
+              <option value={props.current.level || "Select Level"} disabled>
                 Select Level
               </option>
               <option value="One">1</option>
@@ -235,7 +231,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="detection_process"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.detection_process : ""}
+              value={props.current.detection_process || ""}
             />
           </label>
           <label className="flex flex-col">
@@ -245,7 +241,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="function"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.function : ""}
+              value={props.current.function || ""}
             />
           </label>
           <label className="flex flex-col">
@@ -255,7 +251,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="incharge"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.incharge : ""}
+              value={props.current.incharge || ""}
             />
           </label>
           <label className="flex flex-col">
@@ -294,10 +290,7 @@ const Modal = (props: IModalProps) => {
               name="status"
               className="border-[1px] border-gray-300 rounded p-2"
             >
-              <option
-                value={props.editMode ? props.current.status : "Select Status"}
-                disabled
-              >
+              <option value={props.current.status || "Select Status"} disabled>
                 Select Status
               </option>
               {status.map((stat, index) => {
@@ -316,7 +309,7 @@ const Modal = (props: IModalProps) => {
               type="text"
               name="countermeasure"
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.countermeasure : ""}
+              value={props.current.countermeasure || ""}
             />
           </label>
           <label className="flex h-full flex-row justify-center gap-4 items-center border-r-[1px] border-gray-500">
@@ -326,7 +319,7 @@ const Modal = (props: IModalProps) => {
               type="checkbox"
               name="fanout"
               className="border-[1px] border-gray-300 rounded p-2"
-              checked={props.editMode ? props.current.fanout : false}
+              checked={props.current.fanout || false}
             />
           </label>
 
@@ -338,7 +331,7 @@ const Modal = (props: IModalProps) => {
               name="remarks"
               onChange={(e) => handleChange(e)}
               className="border-[1px] border-gray-300 rounded p-2"
-              value={props.editMode ? props.current.remarks : ""}
+              value={props.current.remarks || ""}
             />
           </label>
         </div>

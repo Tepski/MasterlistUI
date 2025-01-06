@@ -8,7 +8,7 @@ export interface IApiData {
   abnormality: string,
   nature_of_abnormality: string;
   affected_item: string;
-  level: number;
+  level: string;
   created: string;
   detection_process: string;
   function: string;

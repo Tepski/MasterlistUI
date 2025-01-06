@@ -36,6 +36,21 @@ export const area_choices: string[] = [
   "OQC",
 ];
 
+export const area_colors: { [key: string]: string[] } = {
+  "20CY": ["#2f4f4f", "rgb(255,255,255)"],
+  "21MY": ["#228b22", "rgb(255,255,255)"],
+  CT1: ["#7f0000", "rgb(255,255,255)"],
+  CT2: ["#000080", "rgb(255,255,255)"],
+  CT3: ["#ff8c00", "rgb(255,255,255)"],
+  CT4: ["#ffff00", "rgb(0,0,0)"],
+  OT: ["#00ff00", "rgb(255,255,255)"],
+  PNT: ["#00ffff", "rgb(0,0,0)"],
+  PZT: ["#ff00ff", "rgb(255,255,255)"],
+  WH: ["#1e90ff", "rgb(255,255,255)"],
+  IQC: ["#ffe4b5", "rgb(0,0,0)"],
+  OQC: ["#ff69b4", "rgb(255,255,255)"],
+};
+
 export const status: string[] = [
   "CAR CREATION",
   "UNDER REVIEW",

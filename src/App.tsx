@@ -1,6 +1,6 @@
 import Table from "./components/Table";
 import { FaPlus } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modal from "./components/Modal";
 // import { sampleData } from "../sample_data";
 import { IApiData } from "@/interfaces";
@@ -9,6 +9,7 @@ import { get, del } from "./api/api";
 function App() {
   const [dummy, setDummy] = useState<IApiData[]>([]);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
   const fields: string[] = [
     "LINK",
@@ -48,7 +49,7 @@ function App() {
     fanout: false,
     function: "",
     incharge: "",
-    level: 1,
+    level: "Select Level",
     nature_of_abnormality: "",
     remarks: "",
     self_resolve_for_car: "",
@@ -83,6 +84,19 @@ function App() {
 
   useEffect(() => {
     getData();
+
+    const closeModal = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setOpenForm((prev) => !prev);
+        setEditMode(false);
+      }
+    };
+
+    window.addEventListener("mousedown", closeModal);
+
+    return () => {
+      window.removeEventListener("mousedown", closeModal);
+    };
   }, []);
 
   const [openForm, setOpenForm] = useState(false);
@@ -112,6 +126,7 @@ function App() {
             data={dummy}
             editMode={editMode}
             setEdit={setEditMode}
+            modalRef={modalRef}
           />
         </div>
       ) : (
