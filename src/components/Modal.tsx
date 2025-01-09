@@ -121,7 +121,7 @@ const Modal = (props: IModalProps) => {
 
   return (
     <div
-      className="w-auto h-auto rounded-xl relative bg-white flex justify-center items-center border-2 border-gray-500"
+      className="w-[97%] h-auto rounded-xl absolute bg-white flex justify-center items-center shadow-lg shadow-black/40"
       ref={props.modalRef}
     >
       <form onSubmit={() => console.log("ASD")}>

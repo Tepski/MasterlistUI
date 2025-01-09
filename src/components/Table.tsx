@@ -83,6 +83,7 @@ const Table = (props: TableProps) => {
 
     document.addEventListener("mousedown", handleMouseOutside);
     scrollRef?.current?.addEventListener("scroll", handleMouseScroll);
+    
     return () => {
       document.removeEventListener("mousedown", handleMouseOutside);
       scrollRef?.current?.removeEventListener("scroll", handleMouseScroll);
@@ -92,6 +93,7 @@ const Table = (props: TableProps) => {
   return (
     <div
       className="overflow-auto h-full w-full rounded-xl shadow-md shadow-black/50"
+      style={{overflow: props.openForm ? "hidden" : "auto"}}
       ref={scrollRef}
     >
       <table className="min-w-full border-collapse border-b">

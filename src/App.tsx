@@ -2,7 +2,6 @@ import Table from "./components/Table";
 import { FaPlus } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import Modal from "./components/Modal";
-// import { sampleData } from "../sample_data";
 import { IApiData } from "@/interfaces";
 import { get, del } from "./api/api";
 
@@ -116,7 +115,7 @@ function App() {
       {/* bg-[rgba(0,0,0,0.3)] */}
       {openForm ? (
         <div
-          className={`flex h-full w-full absolute bg-[rgba(0,0,0,0.1)] justify-end  items-end z-20 animate-in ease-in-out duration-100`}
+          className={`flex h-full w-full absolute bg-[rgba(0,0,0,0.05)] justify-center pb-2  items-end z-20 animate-in ease-in-out duration-100`}
         >
           <Modal
             setOpen={setOpenForm}
