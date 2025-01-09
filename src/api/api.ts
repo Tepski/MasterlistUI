@@ -1,7 +1,7 @@
 import { IApiData } from '@/interfaces';
 import axios from 'axios';
 
-const BASE_URL = 'https://masterlistserver.onrender.com/api/'
+const BASE_URL = 'https://masterlistserver.onrender.com/ipApi/'
 
 const api = axios.create({
     baseURL: BASE_URL,

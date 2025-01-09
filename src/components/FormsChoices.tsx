@@ -22,21 +22,30 @@ export const category_choices: string[] = [
 ];
 
 export const area_choices: string[] = [
-  "20CY",
-  "21MY",
-  "CT1",
-  "CT2",
-  "CT3",
-  "CT4",
-  "OT",
-  "PNT",
-  "PZT",
-  "WH",
+  "IP Line 1",
+  "IP Line 2",
+  "IP-CBF",
+  "IP-ELement",
+  "IP Prep",
   "IQC",
   "OQC",
+  "MID QC",
+  "WH",
 ];
 
 export const area_colors: { [key: string]: string[] } = {
+  "IP Line 1": ["#2f4f4f", "rgb(255,255,255)"],
+  "IP Line 2": ["#228b22", "rgb(255,255,255)"],
+  "IP-CBF": ["#7f0000", "rgb(255,255,255)"],
+  "IP-ELement": ["#000080", "rgb(255,255,255)"],
+  "IP Prep": ["#ff8c00", "rgb(255,255,255)"],
+  IQC: ["#ffff00", "rgb(0,0,0)"],
+  OQC: ["#00ff00", "rgb(255,255,255)"],
+  "MID QC": ["#00ffff", "rgb(0,0,0)"],
+  WH: ["#ff00ff", "rgb(255,255,255)"],
+};
+
+export const area_colors_ip: { [key: string]: string[] } = {
   "20CY": ["#2f4f4f", "rgb(255,255,255)"],
   "21MY": ["#228b22", "rgb(255,255,255)"],
   CT1: ["#7f0000", "rgb(255,255,255)"],
